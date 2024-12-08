@@ -2,7 +2,7 @@
 
 **billing-service** is a sample service to learn how to manage the secrets via Vault and the billing-service configuration via Consul and Spring Config (2 ways) and the microservices architecture.
 
-## Archi
+## Design
 
     Todo: draw flow diagram
 
@@ -12,7 +12,7 @@
 - gateway-service: Gateway between services --here optional (not the learning target)
 - consul-service: Like config-service
 
-## Prérequis
+## Required
 
 **Java 17+** (or up)
 **Maven** (to manage the dependencies)
