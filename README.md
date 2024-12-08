@@ -1,6 +1,10 @@
 #BILLING-SERVICE
 
-**billing-service** is a sample service to learn how to manage the secrets via Vault and the billing-service configuration via Consul and Spring Config (2 ways) and the microservices architecture.
+**billing-service** is a sample service to learn how:
+
+to manage the billing-service configuration with *VAULT* *CONSUL* and *SPRING CONFIG*
+to manage the key/values of *VAULT* and *CONSUL*
+to understand the microservices architecture
 
 ## Design
 
@@ -51,7 +55,7 @@ consul kv put token/accessTokenTimeout $ACCESS_TOKEN_TIMEOUT
 consul kv put token/refreshTokenTimeout $REFRESH_TOKEN_TIMEOUT
 ```
 
-KV names and path are in accordance with billing-service Consul properties [application.properties.sh](src/main/resources/application.properties)
+KV names and path are in accordance with billing-service Consul properties [application.properties](src/main/resources/application.properties)
 
 There is no properties for consul in the billing-service, but you can add them, here an example:
 
@@ -97,7 +101,7 @@ export VAULT_TOKEN = YOUR_GENERATED_TOKEN
 ```bash
 vault kv put secret/billing-service user.username="example_user" user.password="example_password" user.opt="example_opt_value"
 ```
-KV names and path are in accordance with billing-service VAULT properties [application.properties.sh](src/main/resources/application.properties) :
+KV names and path are in accordance with billing-service VAULT properties [application.properties](src/main/resources/application.properties) :
 ```bash
 spring.cloud.vault.kv.backend=secret
 spring.cloud.vault.kv.default-context=billing-service
