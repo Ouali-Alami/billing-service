@@ -121,8 +121,25 @@ For each service, you must start them independently, which is precisely the goal
 mvn spring-boot:run
 ```
 
+## TEST
+To see the KV of consul and vault go to http://localhost:8084/myConfig
+And now with the properties [application.properties.sh](src/main/resources/application.properties) :
+```bash
+management.endpoints.web.exposure.include=*
+```
+We can refresh the value with actuator :
+```bash
+curl -X POST http://localhost:8084/actuator/refresh
+```
+# Support
 
+If you find this project useful or interesting, please consider supporting it:
 
+⭐ **Star** this repository to show your support!
+
+🚀 **Fork** this repo and submit a pull request with your improvements.
+
+📢 **Share** this repository with others to help spread the word!
 
 
 
