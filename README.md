@@ -39,6 +39,22 @@ consul agent -server -bootstrap-expect=1 -data-dir=consul-data -ui -bind=YOUR_IP
 ```
 ### Adding key/value secrets in Consul
 
+WARNING  !!!! ALL THE STEPS BELOW FOR **VAULT** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_consul_kv_generator.sh](_dev_consul_kv_generator.sh) you're free to modify it according to your needs...
+
+ ```bash
+./dev_consul_kv_generator.sh
+```
+but more details about this script here...
+
+If you work with terminal, export your token(non persistant variable only for the current session), your local addr, and create the kv:
+```bash
+export VAULT_ADDR="http://127.0.0.1:8200"
+export VAULT_TOKEN = YOUR_GENERATED_TOKEN
+```
+```bash
+vault kv put secret/billing-service user.username="example_user" user.password="example_password" user.opt="example_opt_value"
+```
+
 KV names and path are in accordance with billing-service Consul properties [application.properties.sh](src/main/resources/application.properties)
 
 There is no properties for consul in the billing-service, but you can add them, here an example:
@@ -47,7 +63,7 @@ There is no properties for consul in the billing-service, but you can add them, 
 # Configuration des clés pour Consul KV
 consul.kv.prefix=token # <- token folder like my prefix below
 ```
-And those kv names, you can add your own config kv... :
+And in accordance with this class too [MyConsulConfig.java](src/main/java/org/sid/billing/MyConsulConfig.java), kv names and directories(prefix), modify it to put some new kv/directories...
 ```code
 @Component
 @ConfigurationProperties(prefix = "token")
@@ -89,7 +105,7 @@ KV names and path are in accordance with billing-service VAULT properties [appli
 spring.cloud.vault.kv.backend=secret
 spring.cloud.vault.kv.default-context=billing-service
 ```
-And this class [MyVaultConfig.java](src/main/java/org/sid/billing/MyVaultConfig.java) :
+And this class too [MyVaultConfig.java](src/main/java/org/sid/billing/MyVaultConfig.java) :
 ```code
 @ConfigurationProperties(prefix = "user")
 public class MyVaultConfig {
@@ -99,7 +115,7 @@ public class MyVaultConfig {
 ```
 You can do this by  UI too at http://localhost:8200/...
 
-TODO:  vault screen 
+    TODO:  vault screen 
 
 ## START SERVICES
 
