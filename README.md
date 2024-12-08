@@ -58,33 +58,28 @@ http://localhost:8500/
 vault server -dev -log-level=debug
 ```
 A TOKEN WILL BE GENERATED LOOK UP THE LOG...
-
-If you work with terminal, export your token(non persistant variable only for the current session):
+ 
+WARNING ALL THE STEPS AFTER FOR VAULT CAN BE DONE ONLY WITH THIS SCRIPT [_dev_vault_kv_generator.sh](_dev_vault_kv_generator.sh) you're free to modify it according to your needs...
 ```bash
+./_dev_vault_kv_generator.sh YOUR_GENERATED_TOKEN
+```
+more details about this script here...
+
+If you work with terminal, export your token(non persistant variable only for the current session), your local addr, and create the kv:
+```bash
+export VAULT_ADDR="http://127.0.0.1:8200"
 export VAULT_TOKEN = YOUR_GENERATED_TOKEN
 ```
-Check your token:
-```bash
-vault token lookup
-```
-
-If your token is expired 2 solutions:
--Restart the server but you will lost your data test
--Generate a another token with:
-```bash
-vault token create -policy="root" -ttl="24h"
-```
-If you work by UI , default addr here:
-```bash
-http://localhost:8200/
-```
 ## Adding key/value secrets in Vault 
-Then add secrets in Vault in accordance with these properties:
+```bash
+vault kv put secret/billing-service user.username="example_user" user.password="example_password" user.opt="example_opt_value"
+```
+KV names and path are in accordance with billing-service VAULT properties [application.properties.sh](src/main/resources/application.properties) :
 ```bash
     spring.cloud.vault.kv.backend=secret
     spring.cloud.vault.kv.default-context=billing-service
 ```
-And those kv names, you can add your own secrets kv.. :
+And this class [MyVaultConfig.java](src/main/java/org/sid/billing/MyVaultConfig.java) :
 ```code
 @ConfigurationProperties(prefix = "user")
 public class MyVaultConfig {
@@ -92,10 +87,12 @@ public class MyVaultConfig {
     private String password;
     private String otp;
 ```
+You can do this by  UI too at http://localhost:8200/...
+
 TODO:  vault screen 
 
 ## Adding key/value secrets in Consul 
-Then add secrets in Consul in accordance with these properties, and th :
+KV names and path are in accordance with billing-service Consul properties [application.properties.sh](src/main/resources/application.properties) :
 ```bash
     spring.cloud.vault.kv.backend=secret
     spring.cloud.vault.kv.default-context=billing-service
