@@ -39,17 +39,14 @@ consul agent -server -bootstrap-expect=1 -data-dir=consul-data -ui -bind=YOUR_IP
 ```
 ### Adding key/value secrets in Consul
 
-WARNING  !!!! ALL THE STEPS BELOW FOR **VAULT** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_consul_kv_generator.sh](_dev_consul_kv_generator.sh) you're free to modify it according to your needs...
-
+WARNING !!
+ALL THE STEPS BELOW FOR **CONSUL** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_consul_kv_generator.sh](_dev_consul_kv_generator.sh) feel free to modify it according to your needs...
  ```bash
 ./dev_consul_kv_generator.sh
 ```
 but more details about this script here...
-
-echo "Création des KV dans Consul sous 'token/'..."
-
-# Utilisation de la commande consul kv pour ajouter les valeurs
  ```bash
+# To put sone consul kv
 consul kv put token/accessTokenTimeout $ACCESS_TOKEN_TIMEOUT
 consul kv put token/refreshTokenTimeout $REFRESH_TOKEN_TIMEOUT
 ```
@@ -84,7 +81,8 @@ A TOKEN WILL BE GENERATED LOOK UP THE LOG...
 
 ### Adding key/value secrets in Vault
 
-WARNING  !!!! ALL THE STEPS BELOW FOR **VAULT** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_vault_kv_generator.sh](_dev_vault_kv_generator.sh) you're free to modify it according to your needs...
+WARNING!! 
+ALL THE STEPS BELOW FOR **VAULT** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_vault_kv_generator.sh](_dev_vault_kv_generator.sh) feel free to modify it according to your needs...
 
  ```bash
 ./_dev_vault_kv_generator.sh YOUR_GENERATED_TOKEN
