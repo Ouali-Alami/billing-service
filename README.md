@@ -1,10 +1,10 @@
 #BILLING-SERVICE
 
-**billing-service** is a sample service to learn how:
+Welcome to my project! 🎉 Here  a sample project to learn how:
 
-to manage the billing-service configuration with *VAULT* *CONSUL* and *SPRING CONFIG*
+the microservices architecture
+to manage a spring app(service) configuration with *VAULT* *CONSUL* and *SPRING CONFIG*
 to manage the key/values of *VAULT* and *CONSUL*
-to understand the microservices architecture
 
 ## Design
 
