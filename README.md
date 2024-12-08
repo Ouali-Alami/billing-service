@@ -46,13 +46,12 @@ WARNING  !!!! ALL THE STEPS BELOW FOR **VAULT** CAN BE DONE ONLY WITH THIS SCRIP
 ```
 but more details about this script here...
 
-If you work with terminal, export your token(non persistant variable only for the current session), your local addr, and create the kv:
-```bash
-export VAULT_ADDR="http://127.0.0.1:8200"
-export VAULT_TOKEN = YOUR_GENERATED_TOKEN
-```
-```bash
-vault kv put secret/billing-service user.username="example_user" user.password="example_password" user.opt="example_opt_value"
+echo "Création des KV dans Consul sous 'token/'..."
+
+# Utilisation de la commande consul kv pour ajouter les valeurs
+ ```bash
+consul kv put token/accessTokenTimeout $ACCESS_TOKEN_TIMEOUT
+consul kv put token/refreshTokenTimeout $REFRESH_TOKEN_TIMEOUT
 ```
 
 KV names and path are in accordance with billing-service Consul properties [application.properties.sh](src/main/resources/application.properties)
