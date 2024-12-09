@@ -41,28 +41,25 @@ consul agent -server -bootstrap-expect=1 -data-dir=consul-data -ui -bind=YOUR_IP
 
 ### Adding key/value secrets in Consul
 
-WARNING !!
-ALL THE STEPS BELOW FOR **CONSUL** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_consul_kv_generator.sh](_dev_consul_kv_generator.sh) feel free to modify it according to your needs...
+#### WARNING !!
+#### ALL THE STEPS BELOW FOR **CONSUL** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_consul_kv_generator.sh](_dev_consul_kv_generator.sh) feel free to modify it according to your needs...
  ```bash
 ./_dev_consul_kv_generator.sh
 ```
-but more details about this script here...
+#### but more details about this script here...
  ```bash
 # To put sone consul kv
 consul kv put token/accessTokenTimeout $ACCESS_TOKEN_TIMEOUT
 consul kv put token/refreshTokenTimeout $REFRESH_TOKEN_TIMEOUT
 ```
 
-KV names and path are in accordance with billing-service Consul properties [application.properties](src/main/resources/application.properties)
-
-There is no properties for consul in the billing-service, but you can add them, here an example:
-
-```bash
-# Configuration des clés pour Consul KV
-consul.kv.prefix=token # <- token folder like my prefix below
+#### KV names and path are in accordance with billing-service Consul properties [application.properties](src/main/resources/application.properties)
+```properties
+spring.cloud.consul.config.prefixes=config
+spring.cloud.consul.config.default-context=billing-service
 ```
-And in accordance with this class too [MyConsulConfig.java](src/main/java/org/sid/billing/MyConsulConfig.java), kv names and directories(prefix), modify it to put some new kv/directories...
-```code
+#### And in accordance with this class too [MyConsulConfig.java](src/main/java/org/sid/billing/MyConsulConfig.java), kv names and directories(prefix), modify it to put some new kv/directories...
+```java
 @Component
 @ConfigurationProperties(prefix = "token")
 
@@ -70,8 +67,8 @@ public class MyConsulConfig {
     private long accessTokenTimeout;
     private long refreshTokenTimeout;
 ```
-TODO:  Consul screen
-for more info about consul here : https://developer.hashicorp.com/consul/
+#### TODO:  Consul screen
+#### for more info about consul here : https://developer.hashicorp.com/consul/
 ## INITIALIZE VAULT
 
 ### start Vault in Dev mode:
@@ -79,19 +76,19 @@ for more info about consul here : https://developer.hashicorp.com/consul/
 ```bash
 vault server -dev -log-level=debug
 ```
-### ⚠️ A TOKEN WILL BE GENERATED LOOK UP THE LOG (Root Token: hvs..............)
+### ⚠️ A TOKEN WILL BE GENERATED LOOK UP THE LOG (Root Token: hvs...)
 
 ### Adding key/value secrets in Vault
 
-WARNING!! 
-ALL THE STEPS BELOW FOR **VAULT** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_vault_kv_generator.sh](_dev_vault_kv_generator.sh) feel free to modify it according to your needs...
+#### WARNING!! 
+#### ALL THE STEPS BELOW FOR **VAULT** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_vault_kv_generator.sh](_dev_vault_kv_generator.sh) feel free to modify it according to your needs...
 
  ```bash
 ./_dev_vault_kv_generator.sh YOUR_GENERATED_TOKEN
 ```
-but more details about this script here...
+#### but more details about this script here...
 
-If you work with terminal, export your token(non persistant variable only for the current session), your local addr, and create the kv:
+#### If you work with terminal, export your token(non persistant variable only for the current session), your local addr, and create the kv:
 ```bash
 export VAULT_ADDR="http://127.0.0.1:8200"
 export VAULT_TOKEN = YOUR_GENERATED_TOKEN
@@ -99,42 +96,41 @@ export VAULT_TOKEN = YOUR_GENERATED_TOKEN
 ```bash
 vault kv put secret/billing-service user.username="example_user" user.password="example_password" user.opt="example_opt_value"
 ```
-⚠️ Note: VAULT context(kv name, path, etc.) is in accordance with billing-service VAULT properties [application.properties](src/main/resources/application.properties),
-to get/put the kv between billing service <-> vault .
-```bash
+#### ⚠️ Note: VAULT context(kv name, path, etc.) is in accordance with billing-service VAULT properties [application.properties](src/main/resources/application.properties),
+#### to get/put the kv between billing service <-> vault .
+```properties
 spring.cloud.vault.kv.backend=secret
 spring.cloud.vault.kv.default-context=billing-service
 ```
-And this class too [MyVaultConfig.java](src/main/java/org/sid/billing/MyVaultConfig.java) :
-```code
+#### And this class too [MyVaultConfig.java](src/main/java/org/sid/billing/MyVaultConfig.java) :
+```java
 @ConfigurationProperties(prefix = "user")
 public class MyVaultConfig {
     private String username;
     private String password;
     private String otp;
 ```
-You can do this by  UI too at http://localhost:8200/...
+#### You can do this by  UI too at http://localhost:8200/...
 
-    TODO:  vault screen 
+        TODO:  vault screen 
 
 ## START SERVICE
 
-before you run the service please put YOUR_GENERATED_TOKEN here [application.properties](src/main/resources/application.properties)
-```bash
+### before you run the service please put YOUR_GENERATED_TOKEN here [application.properties](src/main/resources/application.properties)
+```properties
 spring.cloud.vault.token=YOUR_GENERATED_TOKEN
 ```
 ## TEST
--POST some new VAULT KV but this time from the service [BillingServiceApplication.java](src/main/java/org/sid/billing/BillingServiceApplication.java) with VAULT API and not with a script:
-```code
+### POST some new VAULT KV but this time from the service [BillingServiceApplication.java](src/main/java/org/sid/billing/BillingServiceApplication.java) with VAULT API and not with a script:
+```java
 CommandLineRunner commandLineRunner(String[] args) {
 return args1 -> {
             Versioned.Metadata resp =vaultTemplate.opsForVersionedKeyValue("secret")
             .put("keypair", Map.of("privateKey","fewfwef", "publicKey","fwe214233wer"));
 		};
 ```
--GET the total (VAULT + CONSUL ) KV created from the script and the service:[ConsulConfigRestController.java](src/main/java/org/sid/billing/ConsulConfigRestController.java):
-```code
--We create some new 
+### GET the total (VAULT + CONSUL ) KV created from the script and the service:[ConsulConfigRestController.java](src/main/java/org/sid/billing/ConsulConfigRestController.java):
+```java
  @GetMapping("/myConfig")
     public Map<String, Object> myConfig() {
         return Map.of("myConsulConfig",myConsulConfig, "myVaultConfig",myVaultConfig);
@@ -143,22 +139,18 @@ return args1 -> {
 ```bash
 mvn spring-boot:run
 ```
-Now go to http://localhost:8084/myConfig to see yours KV from consul and vault.
+### Now go to http://localhost:8084/myConfig to see yours KV from consul and vault.
 
-
-```bash
-management.endpoints.web.exposure.include=*
-```
- Refresh the value with actuator:
+### Refresh the value with actuator:
 ```bash
 curl -X POST http://localhost:8084/actuator/refresh
 ```
 
-for more infos about vault here : https://developer.hashicorp.com/vault/
-TODO:
--sample script to build a cluster of 2 consul agent 1 server(ip network) / 1 client(ip localhost)
--sample Script to create some certificate via vault and use it in the app
--sample script to create and handle JWT via vault
+#### for more infos about vault here : https://developer.hashicorp.com/vault/
+#### TODO:
+#### -sample script to build a cluster of 2 consul agent 1 server(ip network) / 1 client(ip localhost)
+#### -sample Script to create some certificate via vault and use it in the app
+#### -sample script to create and handle JWT via vault
 
 
 
