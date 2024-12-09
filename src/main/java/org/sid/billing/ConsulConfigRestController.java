@@ -11,9 +11,6 @@ import org.springframework.cloud.vault.config.VaultConfigTemplate;
 import java.util.Map;
 
 //@RefreshScope //<- old not needed with ConfigurationProperties
-// consul cmd to create the pair key,value in consul:
-//  consul kv put /config/billing-service/token/accessTokenTimeout 3600
-//  warning you cannot create a key with '.' in cmd but via the ui you can
 @RestController
 public class ConsulConfigRestController {
 
@@ -23,18 +20,15 @@ public class ConsulConfigRestController {
 //    private long accessTokenTimeout;
 //    @Value("${refreshTokenTimeout}")
 //    private long refreshTokenTimeout;
+
 //    @GetMapping("/myConfig")
-//
 //    public Map<String, Object> myConfig() {
 //        return Map.of("accessTokenTimeout",accessTokenTimeout, "refreshTokenTimeout",refreshTokenTimeout);
 //    }
-    // new way with ConfigurationProperties
-    // not working collision between spring config and consul interpretation of url
-    // warning . are replace by /
     private final MyConsulConfig myConsulConfig;
     private final MyVaultConfig myVaultConfig;
 
-    // Injection par constructeur
+    // Injection by constructor
     @Autowired
     public ConsulConfigRestController(MyConsulConfig myConsulConfig, MyVaultConfig myVaultConfig) {
         this.myConsulConfig = myConsulConfig;
@@ -45,5 +39,4 @@ public class ConsulConfigRestController {
     public Map<String, Object> myConfig() {
         return Map.of("myConsulConfig",myConsulConfig, "myVaultConfig",myVaultConfig);
     }
-
 }

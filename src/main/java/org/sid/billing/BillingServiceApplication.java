@@ -26,9 +26,9 @@ public class BillingServiceApplication {
 	CommandLineRunner commandLineRunner(String[] args) {
 		return args1 -> {
 			Versioned.Metadata resp =vaultTemplate.opsForVersionedKeyValue("secret")
-					.put("keyPair", Map.of("priveyKey","fewfwef", "pubKey","fwe214233wer"));
+					.put("keyPair", Map.of("privatekey","fewfwef", "publicKey","fwe214233wer"));
 
-			// here for a specific version of the key in vault
+			// here for a specific version of the kv in vault check doc
 			//vaultTemplate.opsForKeyValue("secret", VaultKeyValueOperationsSupport.KeyValueBackend.versioned())
 			//	.put("mySecret.p1", "fgrego434");
 		};

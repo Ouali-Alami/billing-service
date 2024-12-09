@@ -24,7 +24,7 @@ echo "Connexion réussie à Vault."
 
 # Créer les secrets sous le chemin 'billing-service'
 echo "Création des secrets dans Vault..."
-vault kv put secret/billing-service user.username="example_user" user.password="example_password" user.opt="example_opt_value"
+vault kv put secret/billing-service user.username="example_user" user.password="example_password" user.otp="example_otp_value"
 
 # Confirmation
 echo "Les secrets ont été créés sous le chemin 'secret/billing-service'."

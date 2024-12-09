@@ -71,7 +71,7 @@ public class MyConsulConfig {
     private long refreshTokenTimeout;
 ```
 TODO:  Consul screen
-
+for more info about consul here : https://developer.hashicorp.com/consul/
 ## INITIALIZE VAULT
 
 ### start Vault in Dev mode:
@@ -100,7 +100,7 @@ export VAULT_TOKEN = YOUR_GENERATED_TOKEN
 vault kv put secret/billing-service user.username="example_user" user.password="example_password" user.opt="example_opt_value"
 ```
 ⚠️ Note: VAULT context(kv name, path, etc.) is in accordance with billing-service VAULT properties [application.properties](src/main/resources/application.properties),
-to get/put the kv beteween billing service <-> vault .
+to get/put the kv between billing service <-> vault .
 ```bash
 spring.cloud.vault.kv.backend=secret
 spring.cloud.vault.kv.default-context=billing-service
@@ -129,7 +129,7 @@ spring.cloud.vault.token=YOUR_GENERATED_TOKEN
 CommandLineRunner commandLineRunner(String[] args) {
 return args1 -> {
             Versioned.Metadata resp =vaultTemplate.opsForVersionedKeyValue("secret")
-            .put("keyPair", Map.of("priveyKey","fewfwef", "pubKey","fwe214233wer"));
+            .put("keypair", Map.of("privateKey","fewfwef", "publicKey","fwe214233wer"));
 		};
 ```
 -GET the total (VAULT + CONSUL ) KV created from the script and the service:[ConsulConfigRestController.java](src/main/java/org/sid/billing/ConsulConfigRestController.java):
@@ -143,15 +143,18 @@ return args1 -> {
 ```bash
 mvn spring-boot:run
 ```
-## RESULT
-To see yours KV from consul and vault  API's Go to http://localhost:8084/myConfig
+Now go to http://localhost:8084/myConfig to see yours KV from consul and vault.
+
+
 ```bash
 management.endpoints.web.exposure.include=*
 ```
-We can refresh the value with actuator :
+ Refresh the value with actuator:
 ```bash
 curl -X POST http://localhost:8084/actuator/refresh
 ```
+
+for more infos about vault here : https://developer.hashicorp.com/vault/
 TODO:
 -sample script to build a cluster of 2 consul agent 1 server(ip network) / 1 client(ip localhost)
 -sample Script to create some certificate via vault and use it in the app
