@@ -1,30 +1,25 @@
-#**BILLING-SERVICE**
+# **BILLING-SERVICE**
 
-Here  a sample project to learn:
+## Here  a sample project to learn:
 
-the microservices architecture
-how to manage a *spring* app (service) configuration with *VAULT* *CONSUL* 
-how to manage the key/values of *VAULT* and *CONSUL*
+### - the microservices architecture
+### - how to manage a *spring* app (service) configuration with *VAULT* *CONSUL* 
+### - how to manage the key/values of *VAULT* and *CONSUL*
 
 ## Design
 
     Todo: draw flow diagram
 
-## List of services who interact with the billing services 
-
-- config service:  Manage the services configuration
-- gateway-service: Gateway between services --here optional (not the learning target)
-- consul-service: Like config-service
-
 ## Required
 
-**Java 17+** (or up)
-**Maven** (to manage the dependencies)
-**Git** (to clone the repository)
+### **Java 17+**
+### **Maven**
+### **Git**
+
 
 ## Installation et Configuration
 
-Clone the git repository :
+### Clone the repository:
 ```bash
 git clone git@github.com:Ouali-Alami/billing-service.git
 ```
@@ -145,13 +140,9 @@ mvn spring-boot:run
 ```bash
 curl -X POST http://localhost:8084/actuator/refresh
 ```
-
 #### for more infos about vault here : https://developer.hashicorp.com/vault/
 #### TODO:
 #### -sample script to build a cluster of 2 consul agent 1 server(ip network) / 1 client(ip localhost)
 #### -sample Script to create some certificate via vault and use it in the app
 #### -sample script to create and handle JWT via vault
-
-
-
 
