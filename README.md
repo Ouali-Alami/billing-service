@@ -1,10 +1,6 @@
 # BILLING-SERVICE
 
-### Here  a sample project to learn:
-
-#### - the microservices architecture
-#### - how to manage a *spring* app (service) configuration with *VAULT* *CONSUL* 
-#### - how to manage the keys/values of *VAULT* and *CONSUL*
+### Learn how to manage how to manage the keys/values of *VAULT* and *CONSUL* with a spring microservice
 
 ## Design
 
@@ -18,9 +14,10 @@
 
 ##### ensure that mvn use java 17
 ```bash
+# quick help(linux):
 java -version #java 17
 mvn -v #use java 17
-# if not installed (linux)
+# if not installed
 sudo apt-get update
 sudo apt install openjdk-17-jdk
 sudo apt install maven
@@ -30,9 +27,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> ~/.bashrc
 echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> ~/.bashrc
 source ~/.bashrc
-
 ```
-
 
 ## Installation & Configuration
 
