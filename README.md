@@ -16,7 +16,7 @@
 ```bash
 # quick help(linux):
 java -version #java 17
-mvn -v #use java 17
+mvn -v #ensure mvn use java 17
 # if not installed
 sudo apt-get update
 sudo apt install openjdk-17-jdk
@@ -36,9 +36,9 @@ source ~/.bashrc
 git clone git@github.com:Ouali-Alami/billing-service.git
 ```
 
-### INITIALIZE CONSUL IN SERVER MODE
+###  CONSUL
 
-#### start Consul in server mode(qorum, write, read etc...) with your ip (localhost or network):
+#### start Consul in server mode(quorum, write, read etc...) with your ip (localhost or network):
 
 ```bash
 consul agent -server -bootstrap-expect=1 -data-dir=consul-data -ui -bind=YOUR_IP
@@ -75,7 +75,7 @@ public class MyConsulConfig {
 #### TODO:  Consul screen
 #### for more info about consul here : https://developer.hashicorp.com/consul/
 
-### INITIALIZE VAULT
+###  VAULT
 
 ### start Vault in Dev mode:
 
