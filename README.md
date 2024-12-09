@@ -16,6 +16,23 @@
 ### **Maven**
 ### **Git**
 
+##### ensure that mvn use java 17
+```bash
+java -version #java 17
+mvn -v #use java 17
+# if not installed (linux)
+sudo apt-get update
+sudo apt install openjdk-17-jdk
+sudo apt install maven
+#optional:
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> ~/.bashrc
+echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> ~/.bashrc
+source ~/.bashrc
+
+```
+
 
 ## Installation & Configuration
 
@@ -32,7 +49,7 @@ git clone git@github.com:Ouali-Alami/billing-service.git
 consul agent -server -bootstrap-expect=1 -data-dir=consul-data -ui -bind=YOUR_IP
 #here data (kv,health etc...) are saved in consul-data directory feel free to change it with your path...
 ```
-#### ⚠️ At the restart of consul if you wanna clean workspace(no kv, etc.), ensure that consul-data directory is empty
+#### ⚠️At the restart of consul if you want a clean workspace(no kv, etc.), ensure that consul-data directory is empty
 
 #### Adding key/value secrets in Consul
 
@@ -42,9 +59,8 @@ consul agent -server -bootstrap-expect=1 -data-dir=consul-data -ui -bind=YOUR_IP
 ```
 #### but more details about this script here...
  ```bash
-# To put sone consul kv
-consul kv put token/accessTokenTimeout $ACCESS_TOKEN_TIMEOUT
-consul kv put token/refreshTokenTimeout $REFRESH_TOKEN_TIMEOUT
+# To put some consul kv, note: you can do it because you are a consul server with full privileges
+consul kv put config/billing-service/token.refreshTokenTimeout $REFRESH_TOKEN_TIMEOUT
 ```
 
 #### KV names and path are in accordance with billing-service Consul properties [application.properties](src/main/resources/application.properties)
@@ -71,12 +87,11 @@ public class MyConsulConfig {
 ```bash
 vault server -dev -log-level=debug
 ```
-#### ⚠️ A TOKEN WILL BE GENERATED LOOK UP THE LOG (Root Token: hvs...)
+#### ⚠️ A TOKEN(root) WILL BE GENERATED LOOK UP THE LOG (Root Token: hvs...)
 
 ### Adding key/value secrets in Vault
 
-#### WARNING!! 
-#### all the steps below for **vault** can be done with the script [_dev_vault_kv_generator.sh](_dev_vault_kv_generator.) feel free to modify it according to your needs...
+#### ⚠️ all the steps below for **vault** can be done with the script [_dev_vault_kv_generator.sh](_dev_vault_kv_generator.) feel free to modify it according to your needs...
 
  ```bash
 ./_dev_vault_kv_generator.sh YOUR_GENERATED_TOKEN
@@ -91,8 +106,8 @@ export VAULT_TOKEN = YOUR_GENERATED_TOKEN
 ```bash
 vault kv put secret/billing-service user.username="example_user" user.password="example_password" user.opt="example_opt_value"
 ```
-#### ⚠️ Note: VAULT context(kv name, path, etc.) is in accordance with billing-service VAULT properties [application.properties](src/main/resources/application.properties),
-#### to get/put the kv between billing service <-> vault .
+#### Note: VAULT context(kv name, path, etc.) is in accordance with billing-service VAULT properties [application.properties](src/main/resources/application.properties),
+#### to get/put the kv between billing service <-> vault.
 ```properties
 spring.cloud.vault.kv.backend=secret
 spring.cloud.vault.kv.default-context=billing-service
@@ -111,13 +126,14 @@ public class MyVaultConfig {
 
 ### START SERVICE
 
-### before you run the service please put YOUR_GENERATED_TOKEN here [application.properties](src/main/resources/application.properties)
+### ⚠️ before you run the service please put YOUR_GENERATED_TOKEN here [application.properties](src/main/resources/application.properties)
 ```properties
 spring.cloud.vault.token=YOUR_GENERATED_TOKEN
 ```
 ### TEST
 #### POST some new VAULT KV but this time from the service [BillingServiceApplication.java](src/main/java/org/sid/billing/BillingServiceApplication.java) with VAULT API and not with a script:
 ```java
+//note: you can do it because you have a root token(init token dev mode no ttl..)
 CommandLineRunner commandLineRunner(String[] args) {
 return args1 -> {
             Versioned.Metadata resp =vaultTemplate.opsForVersionedKeyValue("secret")
@@ -142,6 +158,7 @@ curl -X POST http://localhost:8084/actuator/refresh
 ```
 #### for more infos about vault here : https://developer.hashicorp.com/vault/
 #### TODO:
+#### -sample script to supply some vault appRole Token for not admin user
 #### -sample script to build a cluster of 2 consul agent 1 server(ip network) / 1 client(ip localhost) 
 #### -sample Script to create some certificate via vault and use it in the app
 #### -sample script to create and handle JWT via vault
