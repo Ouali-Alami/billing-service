@@ -1,10 +1,10 @@
-# **BILLING-SERVICE**
+# BILLING-SERVICE
 
-## Here  a sample project to learn:
+### Here  a sample project to learn:
 
-### - the microservices architecture
-### - how to manage a *spring* app (service) configuration with *VAULT* *CONSUL* 
-### - how to manage the key/values of *VAULT* and *CONSUL*
+#### - the microservices architecture
+#### - how to manage a *spring* app (service) configuration with *VAULT* *CONSUL* 
+#### - how to manage the key/values of *VAULT* and *CONSUL*
 
 ## Design
 
