@@ -1,10 +1,10 @@
-#BILLING-SERVICE
+#**BILLING-SERVICE**
 
-Welcome to my project! 🎉 Here  a sample project to learn how:
+Here  a sample project to learn:
 
 the microservices architecture
-to manage a spring app(service) configuration with *VAULT* *CONSUL* and *SPRING CONFIG*
-to manage the key/values of *VAULT* and *CONSUL*
+how to manage a *spring* app (service) configuration with *VAULT* *CONSUL* 
+how to manage the key/values of *VAULT* and *CONSUL*
 
 ## Design
 
@@ -24,29 +24,27 @@ to manage the key/values of *VAULT* and *CONSUL*
 
 ## Installation et Configuration
 
-1-Ensure that you have the same jdk17(or up) for all the services.
-
-2-Clone the 3 git repositories :
-
+Clone the git repository :
 ```bash
-git clone git@github.com:Ouali-Alami/config-service.git
-git clone git@github.com:Ouali-Alami/gateway-service.git -- here optional (not the learning target)
 git clone git@github.com:Ouali-Alami/billing-service.git
 ```
 
-## INITIALIZE CONSUL
+## INITIALIZE CONSUL IN SERVER MODE
 
-### start Consul in server mode with your ip (local or network):
+### start Consul in server mode(qorum, write, read etc...) with your ip (localhost or network):
 
 ```bash
 consul agent -server -bootstrap-expect=1 -data-dir=consul-data -ui -bind=YOUR_IP
+#here data (kv,health etc...) are saved in consul-data directory feel free to change it with your path...
 ```
+### ⚠️ At the restart of consul if you wanna clean workspace(no kv, etc.), ensure that consul-data directory is empty
+
 ### Adding key/value secrets in Consul
 
 WARNING !!
 ALL THE STEPS BELOW FOR **CONSUL** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_consul_kv_generator.sh](_dev_consul_kv_generator.sh) feel free to modify it according to your needs...
  ```bash
-./dev_consul_kv_generator.sh
+./_dev_consul_kv_generator.sh
 ```
 but more details about this script here...
  ```bash
@@ -81,7 +79,7 @@ TODO:  Consul screen
 ```bash
 vault server -dev -log-level=debug
 ```
-A TOKEN WILL BE GENERATED LOOK UP THE LOG...
+### ⚠️ A TOKEN WILL BE GENERATED LOOK UP THE LOG (Root Token: hvs..............)
 
 ### Adding key/value secrets in Vault
 
@@ -101,7 +99,8 @@ export VAULT_TOKEN = YOUR_GENERATED_TOKEN
 ```bash
 vault kv put secret/billing-service user.username="example_user" user.password="example_password" user.opt="example_opt_value"
 ```
-KV names and path are in accordance with billing-service VAULT properties [application.properties](src/main/resources/application.properties) :
+⚠️ Note: VAULT context(kv name, path, etc.) is in accordance with billing-service VAULT properties [application.properties](src/main/resources/application.properties),
+to get/put the kv beteween billing service <-> vault .
 ```bash
 spring.cloud.vault.kv.backend=secret
 spring.cloud.vault.kv.default-context=billing-service
@@ -118,16 +117,34 @@ You can do this by  UI too at http://localhost:8200/...
 
     TODO:  vault screen 
 
-## START SERVICES
+## START SERVICE
 
-For each service, you must start them independently, which is precisely the goal of microservices:
+before you run the service please put YOUR_GENERATED_TOKEN here [application.properties](src/main/resources/application.properties)
+```bash
+spring.cloud.vault.token=YOUR_GENERATED_TOKEN
+```
+## TEST
+-POST some new VAULT KV but this time from the service [BillingServiceApplication.java](src/main/java/org/sid/billing/BillingServiceApplication.java) with VAULT API and not with a script:
+```code
+CommandLineRunner commandLineRunner(String[] args) {
+return args1 -> {
+            Versioned.Metadata resp =vaultTemplate.opsForVersionedKeyValue("secret")
+            .put("keyPair", Map.of("priveyKey","fewfwef", "pubKey","fwe214233wer"));
+		};
+```
+-GET the total (VAULT + CONSUL ) KV created from the script and the service:[ConsulConfigRestController.java](src/main/java/org/sid/billing/ConsulConfigRestController.java):
+```code
+-We create some new 
+ @GetMapping("/myConfig")
+    public Map<String, Object> myConfig() {
+        return Map.of("myConsulConfig",myConsulConfig, "myVaultConfig",myVaultConfig);
+    }
+```
 ```bash
 mvn spring-boot:run
 ```
-
-## TEST
-To see the KV of consul and vault go to http://localhost:8084/myConfig
-And now with the properties [application.properties.sh](src/main/resources/application.properties) :
+## RESULT
+To see yours KV from consul and vault  API's Go to http://localhost:8084/myConfig
 ```bash
 management.endpoints.web.exposure.include=*
 ```
@@ -135,15 +152,10 @@ We can refresh the value with actuator :
 ```bash
 curl -X POST http://localhost:8084/actuator/refresh
 ```
-# Support
-
-If you find this project useful or interesting, please consider supporting it:
-
-⭐ **Star** this repository to show your support!
-
-🚀 **Fork** this repo and submit a pull request with your improvements.
-
-📢 **Share** this repository with others to help spread the word!
+TODO:
+-sample script to build a cluster of 2 consul agent 1 server(ip network) / 1 client(ip localhost)
+-sample Script to create some certificate via vault and use it in the app
+-sample script to create and handle JWT via vault
 
 
 
