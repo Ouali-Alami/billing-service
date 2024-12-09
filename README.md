@@ -4,7 +4,7 @@
 
 #### - the microservices architecture
 #### - how to manage a *spring* app (service) configuration with *VAULT* *CONSUL* 
-#### - how to manage the key/values of *VAULT* and *CONSUL*
+#### - how to manage the keys/values of *VAULT* and *CONSUL*
 
 ## Design
 
