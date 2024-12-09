@@ -36,8 +36,7 @@ consul agent -server -bootstrap-expect=1 -data-dir=consul-data -ui -bind=YOUR_IP
 
 #### Adding key/value secrets in Consul
 
-#### WARNING !!
-#### ALL THE STEPS BELOW FOR **CONSUL** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_consul_kv_generator.sh](_dev_consul_kv_generator.sh) feel free to modify it according to your needs...
+#### ⚠️ all the steps below for **consul** can be done with this script [_dev_consul_kv_generator.sh](_dev_consul_kv_generator.sh) feel free to modify it according to your needs...
  ```bash
 ./_dev_consul_kv_generator.sh
 ```
@@ -77,7 +76,7 @@ vault server -dev -log-level=debug
 ### Adding key/value secrets in Vault
 
 #### WARNING!! 
-#### ALL THE STEPS BELOW FOR **VAULT** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_vault_kv_generator.sh](_dev_vault_kv_generator.sh) feel free to modify it according to your needs...
+#### all the steps below for **vault** can be done with the script [_dev_vault_kv_generator.sh](_dev_vault_kv_generator.) feel free to modify it according to your needs...
 
  ```bash
 ./_dev_vault_kv_generator.sh YOUR_GENERATED_TOKEN
@@ -125,7 +124,7 @@ return args1 -> {
             .put("keypair", Map.of("privateKey","fewfwef", "publicKey","fwe214233wer"));
 		};
 ```
-#### GET the total (VAULT + CONSUL ) KV created from the script and the service:[ConsulConfigRestController.java](src/main/java/org/sid/billing/ConsulConfigRestController.java):
+#### GET the total (VAULT + CONSUL) KV created from the script and the service:[ConsulConfigRestController.java](src/main/java/org/sid/billing/ConsulConfigRestController.java):
 ```java
  @GetMapping("/myConfig")
     public Map<String, Object> myConfig() {
@@ -143,7 +142,7 @@ curl -X POST http://localhost:8084/actuator/refresh
 ```
 #### for more infos about vault here : https://developer.hashicorp.com/vault/
 #### TODO:
-#### -sample script to build a cluster of 2 consul agent 1 server(ip network) / 1 client(ip localhost)
+#### -sample script to build a cluster of 2 consul agent 1 server(ip network) / 1 client(ip localhost) 
 #### -sample Script to create some certificate via vault and use it in the app
 #### -sample script to create and handle JWT via vault
 
