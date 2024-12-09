@@ -17,24 +17,24 @@
 ### **Git**
 
 
-## Installation et Configuration
+## Installation & Configuration
 
 ### Clone the repository:
 ```bash
 git clone git@github.com:Ouali-Alami/billing-service.git
 ```
 
-## INITIALIZE CONSUL IN SERVER MODE
+### INITIALIZE CONSUL IN SERVER MODE
 
-### start Consul in server mode(qorum, write, read etc...) with your ip (localhost or network):
+#### start Consul in server mode(qorum, write, read etc...) with your ip (localhost or network):
 
 ```bash
 consul agent -server -bootstrap-expect=1 -data-dir=consul-data -ui -bind=YOUR_IP
 #here data (kv,health etc...) are saved in consul-data directory feel free to change it with your path...
 ```
-### ⚠️ At the restart of consul if you wanna clean workspace(no kv, etc.), ensure that consul-data directory is empty
+#### ⚠️ At the restart of consul if you wanna clean workspace(no kv, etc.), ensure that consul-data directory is empty
 
-### Adding key/value secrets in Consul
+#### Adding key/value secrets in Consul
 
 #### WARNING !!
 #### ALL THE STEPS BELOW FOR **CONSUL** CAN BE DONE ONLY WITH THIS SCRIPT [_dev_consul_kv_generator.sh](_dev_consul_kv_generator.sh) feel free to modify it according to your needs...
@@ -64,14 +64,15 @@ public class MyConsulConfig {
 ```
 #### TODO:  Consul screen
 #### for more info about consul here : https://developer.hashicorp.com/consul/
-## INITIALIZE VAULT
+
+### INITIALIZE VAULT
 
 ### start Vault in Dev mode:
 
 ```bash
 vault server -dev -log-level=debug
 ```
-### ⚠️ A TOKEN WILL BE GENERATED LOOK UP THE LOG (Root Token: hvs...)
+#### ⚠️ A TOKEN WILL BE GENERATED LOOK UP THE LOG (Root Token: hvs...)
 
 ### Adding key/value secrets in Vault
 
@@ -109,14 +110,14 @@ public class MyVaultConfig {
 
         TODO:  vault screen 
 
-## START SERVICE
+### START SERVICE
 
 ### before you run the service please put YOUR_GENERATED_TOKEN here [application.properties](src/main/resources/application.properties)
 ```properties
 spring.cloud.vault.token=YOUR_GENERATED_TOKEN
 ```
-## TEST
-### POST some new VAULT KV but this time from the service [BillingServiceApplication.java](src/main/java/org/sid/billing/BillingServiceApplication.java) with VAULT API and not with a script:
+### TEST
+#### POST some new VAULT KV but this time from the service [BillingServiceApplication.java](src/main/java/org/sid/billing/BillingServiceApplication.java) with VAULT API and not with a script:
 ```java
 CommandLineRunner commandLineRunner(String[] args) {
 return args1 -> {
@@ -124,7 +125,7 @@ return args1 -> {
             .put("keypair", Map.of("privateKey","fewfwef", "publicKey","fwe214233wer"));
 		};
 ```
-### GET the total (VAULT + CONSUL ) KV created from the script and the service:[ConsulConfigRestController.java](src/main/java/org/sid/billing/ConsulConfigRestController.java):
+#### GET the total (VAULT + CONSUL ) KV created from the script and the service:[ConsulConfigRestController.java](src/main/java/org/sid/billing/ConsulConfigRestController.java):
 ```java
  @GetMapping("/myConfig")
     public Map<String, Object> myConfig() {
@@ -134,9 +135,9 @@ return args1 -> {
 ```bash
 mvn spring-boot:run
 ```
-### Now go to http://localhost:8084/myConfig to see yours KV from consul and vault.
+#### Now go to http://localhost:8084/myConfig to see yours KV from consul and vault.
 
-### Refresh the value with actuator:
+#### Refresh the value with actuator:
 ```bash
 curl -X POST http://localhost:8084/actuator/refresh
 ```
