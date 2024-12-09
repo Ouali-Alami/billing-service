@@ -153,7 +153,7 @@ curl -X POST http://localhost:8084/actuator/refresh
 ```
 #### for more infos about vault here : https://developer.hashicorp.com/vault/
 #### TODO:
-#### -sample script to supply some vault appRole Token for not admin user
+#### -sample script to supply an vault (role_id , secret_id) with appRole bound with some policies for not admin user to generate token
 #### -sample script to build a cluster of 2 consul agent 1 server(ip network) / 1 client(ip localhost) 
 #### -sample Script to create some certificate via vault and use it in the app
 #### -sample script to create and handle JWT via vault
