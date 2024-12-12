@@ -11,6 +11,7 @@
 ### **Java 17+**
 ### **Maven**
 ### **Git**
+### **Consul v1.17.3**
 
 ##### ensure that mvn use java 17
 ```bash
@@ -19,7 +20,7 @@ java -version #java 17
 mvn -v #ensure mvn use java 17
 # if not installed
 sudo apt-get update
-sudo apt install openjdk-17-jdk
+sudo apt install openjdk-17
 sudo apt install maven
 #optional:
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
@@ -28,6 +29,7 @@ echo "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> ~/.bashrc
 echo "export PATH=\$JAVA_HOME/bin:\$PATH" >> ~/.bashrc
 source ~/.bashrc
 ```
+For Consul look the [official documentation from hashicorp] (https://developer.hashicorp.com/consul/docs/v1.17.x/install.)
 
 ## Installation & Configuration
 
@@ -41,8 +43,9 @@ git clone git@github.com:Ouali-Alami/billing-service.git
 #### start Consul in server mode(quorum, write, read etc...) with your ip (localhost or network):
 
 ```bash
-consul agent -server -bootstrap-expect=1 -data-dir=consul-data -ui -bind=YOUR_IP
-#here data (kv,health etc...) are saved in consul-data directory feel free to change it with your path...
+YOUR_IP=$(hostname -I)
+consul agent -server -bootstrap-expect=1 -data-dir=consul-data -ui -bind=$YOUR_IP
+#here consul artifacts(kv,health etc...) are saved in consul-data/ directory feel free to change it with your path...
 ```
 #### ⚠️At the restart of consul if you want a clean workspace(no kv, etc.), ensure that consul-data directory is empty
 
@@ -71,6 +74,7 @@ spring.cloud.consul.config.default-context=billing-service
 public class MyConsulConfig {
     private long accessTokenTimeout;
     private long refreshTokenTimeout;
+}
 ```
 #### TODO:  Consul screen
 #### for more info about consul here : https://developer.hashicorp.com/consul/
@@ -86,7 +90,7 @@ vault server -dev -log-level=debug
 
 ### Adding key/value secrets in Vault
 
-#### ⚠️ all the steps below for **vault** can be done with the script [_dev_vault_kv_generator.sh](_dev_vault_kv_generator.) feel free to modify it according to your needs...
+#### ⚠️ all the steps below for **vault** can be done with the script [_dev_vault_kv_generator.sh](_dev_vault_kv_generator.sh) feel free to modify it according to your needs...
 
  ```bash
 ./_dev_vault_kv_generator.sh YOUR_GENERATED_TOKEN
@@ -114,6 +118,7 @@ public class MyVaultConfig {
     private String username;
     private String password;
     private String otp;
+}
 ```
 #### You can do this by  UI too at http://localhost:8200/...
 
@@ -128,12 +133,13 @@ spring.cloud.vault.token=YOUR_GENERATED_TOKEN
 ### TEST
 #### POST some new VAULT KV but this time from the service [BillingServiceApplication.java](src/main/java/org/sid/billing/BillingServiceApplication.java) with VAULT API and not with a script:
 ```java
-//note: you can do it because you have a root token(init token dev mode no ttl..)
+//note: you can do it because you have a root token(init token dev mode no ttl...)
 CommandLineRunner commandLineRunner(String[] args) {
-return args1 -> {
-            Versioned.Metadata resp =vaultTemplate.opsForVersionedKeyValue("secret")
-            .put("keypair", Map.of("privateKey","fewfwef", "publicKey","fwe214233wer"));
-		};
+    return args1 -> {
+        Versioned.Metadata resp = vaultTemplate.opsForVersionedKeyValue("secret")
+                .put("keypair", Map.of("privateKey", "privateKeyValue", "publicKey", "publicKeyValue"));
+    };
+}
 ```
 #### GET the total (VAULT + CONSUL) KV created from the script and the service:[ConsulConfigRestController.java](src/main/java/org/sid/billing/ConsulConfigRestController.java):
 ```java
@@ -153,7 +159,7 @@ curl -X POST http://localhost:8084/actuator/refresh
 ```
 #### for more infos about vault here : https://developer.hashicorp.com/vault/
 #### TODO:
-#### -sample script to supply an vault (role_id , secret_id) with appRole bound with some policies for not admin user to generate token
+#### -sample script to supply a vault (role_id , secret_id) with appRole bound with some policies for not admin user to generate token
 #### -sample script to build a cluster of 2 consul agent 1 server(ip network) / 1 client(ip localhost) 
 #### -sample Script to create some certificate via vault and use it in the app
 #### -sample script to create and handle JWT via vault
